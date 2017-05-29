@@ -16,7 +16,9 @@ source("./scripts/location.r")
 
 #Authentication
 Twitter.Auth()
-
+df <- read.csv("./Data/city_data.csv")
+g <- Top.Map(df)
+g
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
