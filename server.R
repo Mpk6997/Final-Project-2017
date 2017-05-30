@@ -16,40 +16,63 @@ source("./scripts/location.r")
 
 #Authentication
 Twitter.Auth()
-df <- read.csv("./Data/city_data.csv")
-g <- Top.Map(df)
-g
-# Define server logic required to draw a histogram
+
+# df <- read.csv("./Data/city_data.csv")
+# g <- Top.Map(df)
+# g
+
 shinyServer(function(input, output) {
+  
+  getTweets <- function() {
+    searchterm <- tolower(input$searchId)
+    if (input$searchInput == "Search") {
+      tweets <- getTweetsFromSearch(searchterm, input$nResults)
+    } else if (input$searchInput == "Trending") {
+      tweets <- getTweetsFromSearch(searchterm, input$nResults)
+    } else {
+      tweets <- getTweetsFromUser(searchterm, input$nResults)
+    }
+    return (tweets)
+  }
+  
+  tweets <- eventReactive(
+    input$Search,{getTweets()}
+  )
 
   output$search <- renderText({
     if (input$searchInput == 'Search') {
       paste("Search: ", input$searchId)
+    } else if (input$searchInput == 'Trending') {
+      paste("Trend: ", input$searchId)
     } else {
       paste("User: ", input$searchId)
     }
   })
 
   output$wordcloud <- renderPlot({
-    searchterm <- tolower(input$searchId)
-    if (input$searchInput == "Search") {
-      tweets <- getTweetsFromSearch(searchterm, input$nResults)
-    } else {
-      tweets <- getTweetsFromUser(searchterm, input$nResults)
-    }
-  
-    getWordCloud(tweets)
+    getWordCloud(tweets())
   })
   
   output$sentimentcloud <- renderPlot({
-    searchterm <- tolower(input$searchId)
-    if (input$searchInput == "Search") {
-      tweets <- getTweetsFromSearch(searchterm, input$nResults)
-    } else {
-      tweets <- getTweetsFromUser(searchterm, input$nResults)
-    }
-    
-    getSentimentCloud(tweets)
+    getSentimentCloud(tweets())
   })
+  
+  output$feeling <- renderPlotly({
+    getFeeling(tweets())
+  })
+  
+  output$searchtype <- renderUI({
+    searchtype()
+  })
+  
+  searchtype <- reactive(
+    if (input$searchInput == "Trending") {
+      selectInput(inputId = 'searchId', 'Select a trend:', getTrendsWC(23424977))
+    } else if (input$searchInput == "Search") {
+      textInput(inputId = "searchId", "Enter Search:", "uw")
+    } else {
+      textInput(inputId = "searchId", "Enter Username: (exclude @)", "katyperry")
+    }
+  )
   
 })

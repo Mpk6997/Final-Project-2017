@@ -1,6 +1,24 @@
 library(tidytext)
 library(reshape2)
 library(wordcloud)
+library(dplyr)
+library(plotly)
+
+
+# 
+# 
+# test <- lapply(trend$name, function(name, n) getTweetsFromSearch(trend$name, 50))
+# 
+
+
+
+
+getTrendsWC <- function(woeid) {
+  trend <- getTrends(woeid)
+  return (trend$name)
+}
+
+
 
 getTweetsFromSearch <- function(my.search, n.results) {
   response <- searchTwitter(my.search, n = n.results, lang = 'en', retryOnRateLimit = 120)
@@ -13,7 +31,7 @@ getTweetsFromUser <- function(my.user, n.results) {
   response <- userTimeline(my.user, n=n.results)
   tweets <- twListToDF(response)
   
-  return (cleanTweets(tweets, my.search))
+  return (cleanTweets(tweets, my.user))
 }
 
 cleanTweets <- function(tweets, my.search) {
@@ -38,17 +56,13 @@ cleanTweets <- function(tweets, my.search) {
 }
 
 getSentimentCloud <- function (tweets) {
-  # count each word
-  countedwords <- tweets %>% count(word, sort = TRUE) 
-  
-  # sentiment
-  bing <- get_sentiments("bing")
-  bing_word_counts <- countedwords %>% inner_join(bing)
-  
   # sentiment wordcloud
-  bing_word_counts %>% acast(word ~ sentiment, value.var = "n", fill = 0) %>% 
+  tweets %>%
+    inner_join(get_sentiments("bing")) %>%
+    count(word, sentiment, sort = TRUE) %>%
+    acast(word ~ sentiment, value.var = "n", fill = 0) %>%
     comparison.cloud(colors = c("#F8766D", "#00BFC4"),
-                     max.words = 100)
+                     max.words = 200)
 }
 
 getWordCloud <- function (tweets) {
@@ -56,18 +70,30 @@ getWordCloud <- function (tweets) {
   # count each word
   countedwords <- tweets %>% count(word, sort = TRUE) 
   
-  # sentiment
-  bing <- get_sentiments("bing")
-  bing_word_counts <- countedwords %>% inner_join(bing)
-  
-  # sentiment wordcloud
-  bing_word_counts %>% acast(word ~ sentiment, value.var = "n", fill = 0) %>% 
-    comparison.cloud(colors = c("#F8766D", "#00BFC4"),
-                     max.words = 100)
-  
   # regular wordcloud
-  set.seed(643)
   wordcloud(words = countedwords$word, freq = countedwords$n, min.freq = 2,
             max.words=100, random.order=FALSE, rot.per=0.35, 
             colors=brewer.pal(8, "Dark2"))
 }
+
+getFeeling <- function (tweets) {
+  
+  countedwords <- tweets %>% count(word, sort = TRUE) 
+  
+  feelings <- countedwords %>%
+    right_join(get_sentiments("nrc")) %>% 
+    filter(!is.na(n)) %>% 
+    filter(!is.na(sentiment)) %>% 
+    count(sentiment, sort = TRUE)
+  
+  plot_ly(
+    x = feelings$sentiment,
+    y = feelings$nn,
+    name = "Feeling",
+    type = "bar"
+  ) %>% 
+    layout(yaxis = list(showticklabels = FALSE), xaxis = list(title = 'Emotion'))
+}
+
+
+

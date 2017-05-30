@@ -19,11 +19,13 @@ shinyUI(navbarPage(
           
       # Inputs (Dropdown menu, textbox, slider, submit button)
       sidebarPanel(
-        selectInput(inputId = 'searchInput', 'Select:', c('Search' = 'Search', 'User\'s Timeline' = 'User')),
-        textInput(inputId = "searchId", "Enter Search or Username:", "realDonaldTrump"),
+        selectInput(inputId = 'searchInput', 'Select:', c('Search' = 'Search', 
+                                                          'User\'s Timeline' = 'User',
+                                                          'Trending' = 'Trending')),
+        uiOutput('searchtype'),
         sliderInput(inputId = 'nResults', "Number of Tweets: (more tweets = longer search)", 
                     min = 25, max = 500, value = 50),
-        submitButton("Search")
+        actionButton("Search", 'Search')
       ),
              
       # Show the plots
@@ -32,7 +34,8 @@ shinyUI(navbarPage(
         splitLayout(
           plotOutput("wordcloud"),
           plotOutput("sentimentcloud")
-        )
+        ),
+        plotlyOutput("feeling")
       )
     )         
   ),
