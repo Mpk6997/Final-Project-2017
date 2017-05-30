@@ -17,7 +17,7 @@ source("./scripts/location.r")
 #Authentication
 Twitter.Auth()
 
-# df <- read.csv("./Data/city_data.csv")
+# df <- read.csv("./Data/woeid_cities.csv")
 # g <- Top.Map(df)
 # g
 
