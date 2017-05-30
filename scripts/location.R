@@ -1,6 +1,8 @@
 library(twitteR)
 library(plotly)
-Top.Map <- function(df) {
+cities <- read.csv("Data/city_data.csv")
+cities <- filter(cities, country == "United States")
+Top.Map <- function(cities) {
  
   
   # geo styling
@@ -15,7 +17,7 @@ Top.Map <- function(df) {
     subunitwidth = 0.5
   )
   
-  p <- plot_geo(df, lat = ~latitude, lon = ~longitude) %>%
+  p <- plot_geo(cities, lat = ~latitude, lon = ~longitude) %>%
     add_markers(
       text = ~paste(city, State, paste("Trends:", getTrends(df$woeid)), sep = "<br />"),
       symbol = I("square"), size = I(8), hoverinfo = "text"
@@ -24,3 +26,4 @@ Top.Map <- function(df) {
       title = paste("Twitter Trends by Location<br />", Sys.time()), geo = g
     )
 }
+

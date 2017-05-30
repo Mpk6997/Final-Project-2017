@@ -18,9 +18,9 @@ source("./scripts/plot.r")
 #Authentication
 Twitter.Auth()
 
- # df <- read.csv("./Data/city_data.csv")
- # g <- Top.Map(df)
-# g
+ df <- read.csv("./Data/city_data.csv")
+  g <- Top.Map(df)
+g
 
 shinyServer(function(input, output) {
   
