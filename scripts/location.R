@@ -1,7 +1,8 @@
 library(twitteR)
 library(plotly)
 Top.Map <- function(df) {
-  Trends <- getTrends(woeid = df$Id)
+  df <- read.csv("./Data/convertcsv.csv")
+  Trends <- lapply(df$woeid, getTrends)
   
   
   # geo styling
