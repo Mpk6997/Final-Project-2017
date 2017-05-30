@@ -1,7 +1,7 @@
 library(twitteR)
 library(plotly)
 Top.Map <- function(df) {
-  df <- read.csv("./Data/convertcsv.csv")
+  df <- read.csv("./Data/city_data.csv")
   Trends <- lapply(df$woeid, getTrends)
   
   
