@@ -13,6 +13,7 @@ library(twitteR)
 source("./scripts/twitterauth.r")
 source("./scripts/wordcloud.r")
 source("./scripts/location.r")
+source("./scripts/plot.r")
 
 #Authentication
 Twitter.Auth()
@@ -63,6 +64,12 @@ shinyServer(function(input, output) {
   
   output$searchtype <- renderUI({
     searchtype()
+  })
+  
+  # renders the plot for the third tab
+  output$accounts <- renderPlotly({
+    y.axis <- input$y_input
+    accountChart(y.axis)
   })
   
   searchtype <- reactive(

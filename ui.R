@@ -7,7 +7,7 @@
 #    http://shiny.rstudio.com/
 #
 
-library(shiny)
+library(shiny) 
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
@@ -39,11 +39,21 @@ shinyUI(navbarPage(
       )
     )         
   ),
+  
   tabPanel("Map",
     "contents"
   ),
+  
   tabPanel("Plot", 
-    "contents"
+    sidebarLayout(
+      sidebarPanel(
+        selectInput(inputId = 'y_input', 'Select Y axis:', c('Following' = 'following', 
+                                                         'Number of Tweets' = 'tweets'))),
+       mainPanel(
+         plotlyOutput("accounts")
+       )
+    )
   )
+  
   
 ))
