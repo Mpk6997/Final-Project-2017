@@ -1,10 +1,10 @@
 # Team:
-# 
+#
 # Ben Basinski
-#
-#
-#
-#
+# Ashish Israni
+# Chaitanya Gangavarapu
+# Matthew Klein
+# Hugo Baldner
 
 
 shinyServer(function(input, output) {
