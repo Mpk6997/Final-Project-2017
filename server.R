@@ -1,29 +1,26 @@
-#
-# This is the server logic of a Shiny web application. You can run the 
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
+# Team:
 # 
-#    http://shiny.rstudio.com/
+# Ben Basinski
+#
+#
+#
 #
 
-library(shiny)
-library(twitteR)
-
-source("./scripts/twitterauth.r")
-source("./scripts/wordcloud.r")
-source("./scripts/location.r")
-source("./scripts/plot.r")
-
-#Authentication
-Twitter.Auth()
-
- df <- read.csv("./Data/city_data.csv")
-  g <- Top.Map(df)
-g
 
 shinyServer(function(input, output) {
   
+  library(shiny)
+  library(twitteR)
+  
+  source("./scripts/twitterauth.r")
+  source("./scripts/wordcloud.r")
+  source("./scripts/location.r")
+  source("./scripts/plot.r")
+  
+  #Authentication
+  Twitter.Auth()
+  
+  #Calls the function to get tweet content from twitter depending on the type of search
   getTweets <- function() {
     searchterm <- tolower(input$searchId)
     if (input$searchInput == "Search") {
@@ -36,10 +33,12 @@ shinyServer(function(input, output) {
     return (tweets)
   }
   
+  #calls the getTweets function only when the search button is pressed
   tweets <- eventReactive(
     input$Search,{getTweets()}
   )
 
+  #renders the text at the top of the page for the search that is being done
   output$search <- renderText({
     if (input$searchInput == 'Search') {
       paste("Search: ", input$searchId)
@@ -50,31 +49,25 @@ shinyServer(function(input, output) {
     }
   })
 
+  #outputs a regular word cloud to the page
   output$wordcloud <- renderPlot({
     getWordCloud(tweets())
   })
   
+  #outputs a sentiment word could to the page (only contains words with sentiments)
   output$sentimentcloud <- renderPlot({
     getSentimentCloud(tweets())
   })
   
+  #outputs a bar graph of the types of emotions that are expressed in the tweets
   output$feeling <- renderPlotly({
     getFeeling(tweets())
   })
   
-  output$searchtype <- renderUI({
-    searchtype()
-  })
-  
-  # renders the plot for the third tab
-  output$accounts <- renderPlotly({
-    y.axis <- input$y_input
-    accountChart(y.axis)
-  })
-  
+  #the function that figures out the type of search that the user wants to do
   searchtype <- reactive(
     if (input$searchInput == "Trending") {
-      selectInput(inputId = 'searchId', 'Select a trend:', getTrendsWC(23424977))
+      selectInput(inputId = 'searchId', 'Select a trend:', getTrendsWC(23424977)) #trends nationwide
     } else if (input$searchInput == "Search") {
       textInput(inputId = "searchId", "Enter Search:", "uw")
     } else {
@@ -82,4 +75,22 @@ shinyServer(function(input, output) {
     }
   )
   
+  #outputs the type of search the user wants to do from the function searchType()
+  output$searchtype <- renderUI({
+    searchtype()
+  })
+  
+  # renders the map for the second tab
+  output$map <- renderPlotly({
+    df <- read.csv("./Data/city_data.csv")
+    g <- Top.Map(df)
+    g
+  })
+  
+  # renders the plot for the third tab
+  output$accounts <- renderPlotly({
+    y.axis <- input$y_input
+    accountChart(y.axis)
+  })
+
 })

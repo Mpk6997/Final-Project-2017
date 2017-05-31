@@ -4,15 +4,6 @@ library(wordcloud)
 library(dplyr)
 library(plotly)
 
-
-# 
-# 
-# test <- lapply(trend$name, function(name, n) getTweetsFromSearch(trend$name, 50))
-# 
-
-
-
-
 getTrendsWC <- function(woeid) {
   trend <- getTrends(woeid)
   return (trend$name)

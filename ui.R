@@ -41,7 +41,9 @@ shinyUI(navbarPage(
   ),
   
   tabPanel("Map",
-    "contents"
+    mainPanel(
+      plotlyOutput("map")
+    )
   ),
   
   tabPanel("Plot", 
