@@ -6,6 +6,8 @@ accountChart <- function(y.axis) {
   y <- list(
     title = y.axis
   )
-  plot_ly(data = df, x = ~followers, y = ~eval(parse(text = y.axis))) %>% 
+  plot_ly(data = df, x = ~followers, y = ~eval(parse(text = y.axis)),
+          # Hover Text
+          text = ~username) %>% 
     layout(title = 'Top Accounts Twitter Data', yaxis = y)
 }
