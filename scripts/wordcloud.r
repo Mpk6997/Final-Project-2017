@@ -4,13 +4,13 @@ library(wordcloud)
 library(dplyr)
 library(plotly)
 
+# gets the top 50 trends nationwide
 getTrendsWC <- function(woeid) {
   trend <- getTrends(woeid)
   return (trend$name)
 }
 
-
-
+# gets n-number of cleaned tweets from given search
 getTweetsFromSearch <- function(my.search, n.results) {
   response <- searchTwitter(my.search, n = n.results, lang = 'en', retryOnRateLimit = 120)
   tweets <- twListToDF(response)
@@ -18,6 +18,7 @@ getTweetsFromSearch <- function(my.search, n.results) {
   return (cleanTweets(tweets, my.search))
 }
 
+# gets n-number of cleaned tweets from given user
 getTweetsFromUser <- function(my.user, n.results) {
   response <- userTimeline(my.user, n=n.results)
   tweets <- twListToDF(response)
@@ -46,8 +47,9 @@ cleanTweets <- function(tweets, my.search) {
   return (cleaned_tweets)
 }
 
+# sentiment wordcloud
 getSentimentCloud <- function (tweets) {
-  # sentiment wordcloud
+  
   tweets %>%
     inner_join(get_sentiments("bing")) %>%
     count(word, sentiment, sort = TRUE) %>%
@@ -56,6 +58,7 @@ getSentimentCloud <- function (tweets) {
                      max.words = 200)
 }
 
+# gets wordcloud with all words that aren't stop words
 getWordCloud <- function (tweets) {
 
   # count each word
@@ -67,6 +70,7 @@ getWordCloud <- function (tweets) {
             colors=brewer.pal(8, "Dark2"))
 }
 
+#gets bar graph of feelings 
 getFeeling <- function (tweets) {
   
   countedwords <- tweets %>% count(word, sort = TRUE) 
