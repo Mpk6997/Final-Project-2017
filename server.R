@@ -12,10 +12,10 @@ shinyServer(function(input, output) {
   library(shiny)
   library(twitteR)
   
-  source("./scripts/twitterauth.r")
+  source("./scripts/twitterauth.R")
   source("./scripts/wordcloud.r")
-  source("./scripts/location.r")
-  source("./scripts/plot.r")
+  source("./scripts/location.R")
+  source("./scripts/plot.R")
   
   #Authentication
   Twitter.Auth()

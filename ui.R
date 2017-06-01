@@ -12,9 +12,10 @@ library(plotly)
 
 # Define UI for application that draws a histogram
 shinyUI(navbarPage(
-  
+    
+
   title = "Searching Twitter",
-  
+  theme = 'bootstrap.css',
   tabPanel("Word Clouds", 
     sidebarLayout(
           
@@ -38,13 +39,30 @@ shinyUI(navbarPage(
         ),
         plotlyOutput("feeling")
       )
-    )         
+        
+    ),
+    tags$p(
+      tags$div(
+        id = 'desciption',
+        
+        includeHTML('html/Word.html')
+      )
+    )   
   ),
   
   tabPanel("Map",
     mainPanel(
       plotlyOutput("map")
+    ),
+    tags$p(
+      tags$div(
+        id = 'desciption',
+        
+        includeHTML('html/Map.html')
+      )
     )
+      
+    
   ),
   
   tabPanel("Plot", 
@@ -55,6 +73,14 @@ shinyUI(navbarPage(
        mainPanel(
          plotlyOutput("accounts")
        )
+      
+    ),
+    tags$p(
+      tags$div(
+        id = 'desciption',
+        
+          includeHTML('html/Plot.html')
+      )
     )
   )
   

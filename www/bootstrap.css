@@ -1,0 +1,17 @@
+#desciption{
+	padding:5px;
+	background-color:white;
+	color: grey;
+}
+.container-fluid{
+	background-color:wheat;
+	
+	color:darkkhaki;
+}
+.tab-content{
+	background-color:beige;
+}
+li.active{
+	background-color:wheat;
+	color:tan;
+}
