@@ -82,7 +82,14 @@ shinyUI(navbarPage(
           includeHTML('html/Plot.html')
       )
     )
+  ),
+  tabPanel("About", 
+  tags$p(
+    tags$div(
+      id = 'desciption',
+      
+      includeHTML('html/about.html')
+    )
   )
-  
-  
+)
 ))
